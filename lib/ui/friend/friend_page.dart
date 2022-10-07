@@ -45,8 +45,8 @@ class FriendPage extends GetView<FriendController> {
     return Obx(() {
       return ListView.builder(
         itemBuilder: ((context, index) =>
-            FriendListItem(controller.friends[index])),
-        itemCount: controller.friends.length,
+            FriendListItem(controller.searchedFriends[index])),
+        itemCount: controller.searchedFriends.length,
       );
     });
   }

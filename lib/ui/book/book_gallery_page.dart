@@ -58,7 +58,7 @@ class BookGalleryPage extends GetView<BookGalleryController> {
     );
   }
 
-  Widget _buildContentView(Map<String, String> content) {
+  Widget _buildContentView(List<String> content) {
     return Row(
       children: [],
     );

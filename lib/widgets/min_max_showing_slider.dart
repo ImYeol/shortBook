@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:short_book/constants/app_config.dart';
 
 class MinMaxShowingSlider extends StatefulWidget {
   final double min;
@@ -14,11 +15,10 @@ class MinMaxShowingSlider extends StatefulWidget {
 }
 
 class _MinMaxShowingSliderState extends State<MinMaxShowingSlider> {
-  double _currentSilderValue = 0;
+  double _currentSilderValue = AppConfig.defaultLimitOfKeywordLength;
 
   @override
   void initState() {
-    _currentSilderValue = widget.min;
     super.initState();
   }
 

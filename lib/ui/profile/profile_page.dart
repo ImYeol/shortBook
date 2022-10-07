@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:short_book/constants/app_config.dart';
 import 'package:get/get.dart';
 import 'package:short_book/controller/login_controller.dart';
+import 'package:short_book/data/repository/user_service.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -86,7 +87,7 @@ class ProfilePage extends StatelessWidget {
           alignment: Alignment.center,
           child: Text("로그아웃"),
         ),
-        onPressed: () => Get.find<LoginController>().logOut(),
+        onPressed: () => Get.find<UserService>().signOut(),
       ),
     );
   }

@@ -4,12 +4,15 @@ class ExpansionCardItem extends StatelessWidget {
   final String title;
   final String selectedItem;
   final List<Widget> children;
-  const ExpansionCardItem({
-    Key? key,
-    this.title = "",
-    this.selectedItem = "",
-    this.children = const <Widget>[],
-  }) : super(key: key);
+  final Function(bool)? onExpansionChanged;
+
+  const ExpansionCardItem(
+      {Key? key,
+      this.title = "",
+      this.selectedItem = "",
+      this.children = const <Widget>[],
+      this.onExpansionChanged})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +27,7 @@ class ExpansionCardItem extends StatelessWidget {
         expandedCrossAxisAlignment: CrossAxisAlignment.start,
         childrenPadding: EdgeInsets.all(10),
         maintainState: true,
+        onExpansionChanged: onExpansionChanged,
         title: Text(
           title,
           style: Theme.of(context).textTheme.labelLarge,

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:short_book/bindings/book_studio_binding.dart';
+import 'package:short_book/bindings/friend_selection_binding.dart';
 import 'package:short_book/constants/app_config.dart';
+import 'package:short_book/constants/app_routes.dart';
 import 'package:short_book/controller/writing_book_controller.dart';
 import 'package:short_book/ui/book/friend_selection_page.dart';
 import 'package:short_book/ui/book/expansion_card_item.dart';
 import 'package:short_book/ui/book/writing_paper_page.dart';
 import 'package:short_book/widgets/min_max_showing_slider.dart';
 
-class WritingBookPage extends GetView<WritingBookController> {
-  WritingBookPage({Key? key}) : super(key: key);
+class BookSettingPage extends GetView<WritingBookController> {
+  BookSettingPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,21 +31,22 @@ class WritingBookPage extends GetView<WritingBookController> {
           padding:
               EdgeInsets.symmetric(horizontal: AppConfig.defaultHorizonPadding),
           child: SingleChildScrollView(
-            child: Column(children: [
-              _buildPageTitleTile(),
-              SizedBox(
-                height: 20,
-              ),
-              _buildWritingTitleTile(),
-              SizedBox(
-                height: 10,
-              ),
-              _buildWritingTypeTile(),
-              SizedBox(
-                height: 10,
-              ),
-              //_buildSendButton()
-            ]),
+            child: Obx(() => Column(children: [
+                  _buildPageTitleTile(),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  _buildWritingTitleTile(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  _buildParticipantsTile(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  _buildWritingLengthLimitTile()
+                  //_buildSendButton()
+                ])),
           ),
         ),
         bottomNavigationBar: BottomAppBar(
@@ -66,6 +68,7 @@ class WritingBookPage extends GetView<WritingBookController> {
   Widget _buildWritingTitleTile() {
     return ExpansionCardItem(
       title: "주제어",
+      selectedItem: controller.title,
       children: [
         Text(
           "삼행시 주제를 입력해주세요.",
@@ -81,52 +84,33 @@ class WritingBookPage extends GetView<WritingBookController> {
     );
   }
 
-  // Widget _buildParticipantsListView() {
-  //   return Container(
-  //     height: 100,
-  //     child: ListView.builder(
-  //       scrollDirection: Axis.horizontal,
-  //       itemCount: 3,
-  //       itemBuilder: (context, index) {
-  //         return Container(
-  //           padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-  //           child: Column(
-  //             children: [
-  //               CircleAvatar(
-  //                 backgroundImage: NetworkImage(
-  //                     'https://www.woolha.com/media/2020/03/eevee.png'),
-  //                 backgroundColor: Colors.red,
-  //               ),
-  //               Text(
-  //                 "testasdf",
-  //                 style: Get.textTheme.labelSmall,
-  //               )
-  //             ],
-  //           ),
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
-  Widget _buildWritingTypeTile() {
+  Widget _buildParticipantsTile() {
+    List<Widget> children = <Widget>[];
+    children.add(
+      ListTile(
+          trailing: IconButton(
+        icon: Icon(Icons.person_add_alt_rounded),
+        onPressed: () {
+          controller.searchFriendsAsParticipants();
+        },
+      )),
+    );
+    children.addAll(List.generate(controller.participants.length,
+        (index) => ListTile(title: Text(controller.participants[index].uid))));
     return ExpansionCardItem(
-      title: "유형",
-      children: [
-        TextField(
-          onChanged: controller.onTitleChanged,
-        )
-      ],
+      title: "참가자",
+      selectedItem: "${controller.participants.length}명",
+      children: children,
     );
   }
 
   Widget _buildWritingLengthLimitTile() {
     return ExpansionCardItem(
-      title: "유형",
+      title: "길이제한",
+      selectedItem: "${controller.limitOfKeywordLength}자",
       children: [
-        TextField(
-          onChanged: controller.onTitleChanged,
-        ),
-        MinMaxShowingSlider(controller.onTimeToWriteChanged, min: 0, max: 30)
+        MinMaxShowingSlider(controller.onKeywordLengthSelectionChanged,
+            min: 3, max: 30)
       ],
     );
   }
@@ -138,11 +122,10 @@ class WritingBookPage extends GetView<WritingBookController> {
         color: Color.fromARGB(255, 94, 94, 94),
         child: TextButton(
           child: Text(
-            '시작',
+            '글쓰기',
             style: Get.textTheme.bodyLarge,
           ),
-          onPressed: () => Get.to(() => const WritingPaperPage(),
-              transition: Transition.rightToLeft),
+          onPressed: () => controller.onSubmitButtonPressed(),
         ));
   }
 }

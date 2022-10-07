@@ -9,4 +9,6 @@ class AppConfig {
   static final double defaultTitleViewTopPadding = 10;
   static final double defaultTitleViewRightPadding = 10;
   static final double defaultTitleViewBottomPadding = 10;
+
+  static final double defaultLimitOfKeywordLength = 8.0;
 }

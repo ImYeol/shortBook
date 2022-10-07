@@ -2,11 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:short_book/bindings/home_binding.dart';
+import 'package:short_book/constants/app_routes.dart';
 import 'package:short_book/ui/login/login_page.dart';
 import 'package:short_book/ui/home/home_page.dart';
 
 class LoginController extends GetxController {
-  late Rx<User?> _user;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   final loginFormKey = GlobalKey<FormState>();
@@ -24,9 +24,6 @@ class LoginController extends GetxController {
   void onReady() {
     print("LoginController onReady");
     super.onReady();
-    _user = Rx<User?>(_auth.currentUser);
-    _user.bindStream(_auth.userChanges());
-    ever(_user, _onUserChanged);
   }
 
   @override
@@ -55,15 +52,6 @@ class LoginController extends GetxController {
       return "Not matched password";
     }
     return null;
-  }
-
-  void _onUserChanged(User? user) {
-    if (user == null) {
-      print("user not logged in");
-      Get.offAll(() => const LoginPage());
-    } else {
-      Get.offAll(() => const HomePage(), binding: HomeBinding());
-    }
   }
 
   void signUp() async {
