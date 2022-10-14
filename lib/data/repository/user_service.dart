@@ -15,6 +15,8 @@ class UserService extends GetxService {
   DocumentReference get doc => col.doc(FirebaseAuth.instance.currentUser?.uid);
   String? get uid => FirebaseAuth.instance.currentUser?.uid;
 
+  CollectionReference get friendsCol => doc.collection('friends');
+
   @override
   void onInit() {
     // TODO: implement onInit
@@ -56,6 +58,41 @@ class UserService extends GetxService {
     //userDocumentContainer[uid] = UserModel.fromSnapshot(snapshot);
     //return userDocumentContainer[uid]!;
     return UserModel.fromSnapshot(snapshot);
+  }
+
+  Future<UserModel> getUserByName(String name) async {
+    final snapshot = await col.where('name', isEqualTo: name).get();
+    final user = snapshot.docs.isNotEmpty
+        ? snapshot.docs.map((doc) => UserModel.fromSnapshot(doc)).first
+        : UserModel();
+    print("getUserByName : ${user}");
+    return user;
+  }
+
+  Future<List<UserModel>> getFriends() async {
+    final snapshot = await friendsCol.get();
+    return snapshot.docs.isNotEmpty
+        ? snapshot.docs.map((doc) => UserModel.fromSnapshot(doc)).toList()
+        : <UserModel>[];
+  }
+
+  Future<void> addFriend(UserModel friend) async {
+    if (friend.uid == currentUser?.uid) {
+      print("friend is current user");
+      return;
+    }
+    friendsCol.doc(friend.uid).get().then((snapshot) {
+      if (snapshot.exists == false) {
+        friendsCol.doc(friend.uid).set({
+          'name': friend.name,
+          'email': friend.email,
+          'imageUrl': friend.imageUrl,
+          'createdAt': Timestamp.now()
+        });
+      } else {
+        print("addFriend : already added friend");
+      }
+    });
   }
 
   void observeUserDoc() {

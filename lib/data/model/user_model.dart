@@ -5,13 +5,14 @@ import 'package:get/get.dart';
 
 class UserModel {
   String uid = '';
+  String name = '';
   String email = '';
   String imageUrl = '';
   // users/uid 문서가 존재하는지
   bool? exists;
   Timestamp? updatedAt;
   Timestamp? createdAt;
-  List<String> friends = <String>[];
+  DocumentReference? friends;
 
   UserModel();
 
@@ -29,6 +30,11 @@ class UserModel {
         ? (data['email'] ?? '')
         : FirebaseAuth.instance.currentUser?.email;
 
+    print("email = $email");
+
+    name = data['name'] ?? '';
+    print("name = $name");
+
     /// Some timestamp data (like date from Typesense) is int.
     createdAt = data['createdAt'] is int
         ? Timestamp(data['createdAt'], 0)
@@ -44,5 +50,10 @@ class UserModel {
   UserModel.fromSnapshot(DocumentSnapshot snapshot) {
     exists = snapshot.exists;
     setProperties(snapshot.data(), snapshot.id);
+  }
+
+  @override
+  String toString() {
+    return "uid = $uid, name = $name, email = $email, updatedAt = $updatedAt createdAt = $createdAt";
   }
 }

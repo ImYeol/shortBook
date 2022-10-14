@@ -1,28 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:short_book/bindings/user_search_binding.dart';
 import 'package:short_book/constants/app_config.dart';
 import 'package:short_book/controller/friend_controller.dart';
 import 'package:short_book/ui/friend/friend_list_item.dart';
+import 'package:short_book/ui/friend/user_search_page.dart';
 
 class FriendPage extends GetView<FriendController> {
   const FriendPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Text("friend");
-    // return Scaffold(
-    //   appBar: _buildAppBar(),
-    //   body: Column(
-    //     children: [_buildTitleView(), _buildFriendListView()],
-    //   ),
-    // );
+    return Scaffold(
+      appBar: _buildAppBar(),
+      body: Container(
+        padding: EdgeInsets.only(
+            left: AppConfig.defaultHorizonPadding,
+            right: AppConfig.defaultHorizonPadding,
+            top: AppConfig.defaultVerticalPadding),
+        child: _buildFriendListView(),
+      ),
+    );
   }
 
   AppBar _buildAppBar() {
     return AppBar(
+      title: const Text("친구"),
+      titleTextStyle: Get.textTheme.headlineSmall,
+      elevation: 5.0,
+      backgroundColor: Get.theme.backgroundColor,
       actions: [
         IconButton(
-            onPressed: () {}, icon: const Icon(Icons.person_add_alt_outlined))
+            onPressed: () =>
+                Get.to(() => UserSearchPage(), binding: UserSearchBinding()),
+            icon: const Icon(Icons.person_add_alt_outlined))
       ],
     );
   }
@@ -42,12 +53,18 @@ class FriendPage extends GetView<FriendController> {
   }
 
   Widget _buildFriendListView() {
+    //return Container();
     return Obx(() {
-      return ListView.builder(
-        itemBuilder: ((context, index) =>
-            FriendListItem(controller.searchedFriends[index])),
-        itemCount: controller.searchedFriends.length,
-      );
+      if (controller.isFriendsLoaded == false) {
+        return CircularProgressIndicator();
+      } else {
+        return ListView.separated(
+          itemBuilder: ((context, index) =>
+              FriendListItem(controller.friends[index])),
+          itemCount: controller.friends.length,
+          separatorBuilder: (context, index) => const Divider(),
+        );
+      }
     });
   }
 }

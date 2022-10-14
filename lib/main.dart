@@ -12,6 +12,7 @@ import 'package:short_book/bindings/writing_book_binding.dart';
 import 'package:short_book/constants/app_routes.dart';
 import 'package:short_book/constants/app_theme.dart';
 import 'package:short_book/controller/login_controller.dart';
+import 'package:short_book/data/repository/gallery_service.dart';
 import 'package:short_book/data/repository/user_service.dart';
 import 'package:short_book/firebase_options.dart';
 import 'package:short_book/ui/book/book_gallery_page.dart';
@@ -35,6 +36,7 @@ void main() async {
 void initServices() {
   //UserService.instance.startService();
   Get.put(UserService());
+  Get.put(GalleryService());
 }
 
 class MyApp extends StatelessWidget {

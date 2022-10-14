@@ -8,10 +8,14 @@ class FriendListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: CircleAvatar(
-        radius: 60.0,
-        backgroundImage: NetworkImage(friend.imageUrl),
-        backgroundColor: Colors.transparent,
+      leading: const Icon(
+        Icons.person,
+        color: Colors.white,
+        size: 50,
+      ),
+      title: Text(
+        friend.name,
+        style: Theme.of(context).textTheme.labelLarge,
       ),
     );
   }

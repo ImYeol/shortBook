@@ -11,6 +11,7 @@ class LoginController extends GetxController {
 
   final loginFormKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
+  final nameController = TextEditingController();
   final passwordController = TextEditingController();
   final passwordConfirmController = TextEditingController();
 

@@ -3,6 +3,7 @@ import 'package:short_book/constants/app_config.dart';
 import 'package:get/get.dart';
 import 'package:short_book/controller/login_controller.dart';
 import 'package:short_book/data/repository/user_service.dart';
+import 'package:short_book/ui/book/my_gallery_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -52,7 +53,7 @@ class ProfilePage extends StatelessWidget {
         SizedBox(
           height: 20,
         ),
-        //_buildMenuItem(Icons.person_outline, "개인정보", GuestEditProfilePage()),
+        _buildMenuItem(Icons.book, "게시글", const MyGalleryPage()),
         //_buildMenuItem(
         //    Icons.lock_outline, "개인정보 보호 및 공유", GuestEditProfilePage())
       ],

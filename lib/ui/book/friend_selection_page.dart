@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:short_book/constants/app_config.dart';
-import 'package:short_book/controller/book_studio_controller.dart';
 import 'package:short_book/controller/friend_controller.dart';
 
 // Only owner is allowed to commit book
@@ -34,17 +33,6 @@ class FriendSelectionPage extends GetView<FriendController> {
                 const SizedBox(
                   height: 10,
                 ),
-                Obx(() {
-                  if (controller.loaded.value) {
-                    print("searchedFriends loaded");
-                    return _buildFriendsListView();
-                  } else {
-                    print("searchedFriends not loaded");
-                    return Center(
-                      child: const CircularProgressIndicator(),
-                    );
-                  }
-                }),
               ]),
         ),
       ),
@@ -77,7 +65,7 @@ class FriendSelectionPage extends GetView<FriendController> {
         ),
         iconColor: Colors.white,
       ),
-      onChanged: (filter) => controller.filterString = filter,
+      onChanged: (filter) => {},
     );
   }
 
@@ -85,7 +73,7 @@ class FriendSelectionPage extends GetView<FriendController> {
     return Expanded(
       child: ListView.builder(
         scrollDirection: Axis.vertical,
-        itemCount: controller.searchedFriends.length,
+        itemCount: 0,
         itemBuilder: (context, index) {
           return Container(
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
@@ -98,12 +86,11 @@ class FriendSelectionPage extends GetView<FriendController> {
                   backgroundColor: Colors.red,
                 ),
                 title: Text(
-                  controller.searchedFriends[index].uid,
+                  '',
                   style: Get.textTheme.labelSmall,
                 ),
               ),
-              onTap: () =>
-                  Get.back(result: [controller.searchedFriends[index]]),
+              onTap: () => Get.back(),
             ),
           );
         },

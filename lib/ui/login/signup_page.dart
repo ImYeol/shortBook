@@ -34,6 +34,11 @@ class SignUpPage extends GetView<LoginController> {
               validator: controller.validator,
             ),
             TextFormField(
+              controller: controller.nameController,
+              decoration: const InputDecoration(labelText: 'Name'),
+              validator: controller.validator,
+            ),
+            TextFormField(
               controller: controller.passwordController,
               decoration: const InputDecoration(labelText: 'Password'),
               validator: controller.validator,

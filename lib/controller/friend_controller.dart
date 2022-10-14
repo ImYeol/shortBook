@@ -3,35 +3,31 @@ import 'package:short_book/data/model/user_model.dart';
 import 'package:short_book/data/repository/user_service.dart';
 
 class FriendController extends GetxController {
+  final _userService = Get.find<UserService>();
   List<UserModel> _friends = <UserModel>[];
   final _searchedFriend = <UserModel>[].obs;
-  final _filterString = "".obs;
-  final loaded = false.obs;
+  List<UserModel> get friends => _friends;
+  final _isFriendsLoaded = false.obs;
 
-  List<UserModel> get searchedFriends => _searchedFriend.value;
-  set filterString(String filter) {
-    _filterString.value = filter;
-  }
+  bool get isFriendsLoaded => _isFriendsLoaded.value;
 
   Future<void> initialize() async {
-    loaded.value = false;
-    final friends = Get.find<UserService>().currentUser?.friends;
-    if (_friends.length > 0) {
-      _filterString.value = "";
-    }
-    loaded.value = true;
+    _isFriendsLoaded.value = false;
+    _friends.clear();
+    _friends = await Get.find<UserService>().getFriends();
+    _isFriendsLoaded.value = true;
   }
 
   @override
   void onInit() {
     super.onInit();
-    initialize();
   }
 
   @override
   void onReady() {
     // TODO: implement onReady
     super.onReady();
+    initialize();
     //ever(_filterString, searchFriend);
   }
 

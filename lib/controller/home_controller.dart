@@ -10,6 +10,7 @@ import 'package:short_book/ui/profile/profile_page.dart';
 
 class HomeController extends GetxController {
   final _currentIndex = 0.obs;
+  final _pageController = PageController(keepPage: true);
 
   final List<String> _pageTitles = ['갤러리', '친구', '알림', '내정보'];
 
@@ -31,6 +32,7 @@ class HomeController extends GetxController {
   List<Widget> get pages => _pages;
   List<String> get pageTitles => _pageTitles;
   List<IconData> get pageIcons => _pageIconData;
+  PageController get pageController => _pageController;
 
   @override
   void onReady() {
@@ -41,7 +43,12 @@ class HomeController extends GetxController {
 
   void changePage(int index) {
     _currentIndex.value = index;
+    pageController.jumpToPage(index);
     print("changePage - $index");
+  }
+
+  bool isSelected(int index) {
+    return _currentIndex.value == index;
   }
 
   void prepareWritingPaper() {
