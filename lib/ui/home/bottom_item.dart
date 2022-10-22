@@ -23,19 +23,19 @@ class BottomItem extends StatelessWidget {
           children: [
             Icon(
               _icon,
-              size: 35,
+              size: 30,
               color: _selected ? Colors.white : Colors.grey,
             ),
-            Text(
-              _title,
-              style: _selected
-                  ? Theme.of(context)
-                      .bottomNavigationBarTheme
-                      .selectedLabelStyle
-                  : Theme.of(context)
-                      .bottomNavigationBarTheme
-                      .unselectedLabelStyle,
-            )
+            // Text(
+            //   _title,
+            //   style: _selected
+            //       ? Theme.of(context)
+            //           .bottomNavigationBarTheme
+            //           .selectedLabelStyle
+            //       : Theme.of(context)
+            //           .bottomNavigationBarTheme
+            //           .unselectedLabelStyle,
+            // )
           ],
         ),
       ),

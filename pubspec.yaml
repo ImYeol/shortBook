@@ -65,6 +65,9 @@ dev_dependencies:
   # infinite store
   infinite_scroll_pagination: ^3.2.0
 
+  # splash screen
+  flutter_native_splash: ^2.2.11
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

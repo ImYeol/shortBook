@@ -4,19 +4,17 @@ import 'package:short_book/constants/app_config.dart';
 import 'package:short_book/controller/feed_controller.dart';
 
 class FeedPage extends GetView<FeedController> {
-  FeedPage({Key? key}) : super(key: key);
-
-  late TabController _tabController;
+  const FeedPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Text("feed");
-    // return Scaffold(
-    //   appBar: AppBar(),
-    //   body: Column(
-    //     children: [_buildTitleView(), _buildTabBar(), _buildTabBarView()],
-    //   ),
-    // );
+    //return Text("feed");
+    return SafeArea(
+        child: Scaffold(
+      body: Column(
+        children: [_buildTitleView(), _buildTabBar(), _buildTabBarView()],
+      ),
+    ));
   }
 
   Widget _buildTitleView() {
@@ -46,7 +44,7 @@ class FeedPage extends GetView<FeedController> {
       alignment: Alignment.center,
       child: Text(
         title,
-        style: Get.textTheme.labelLarge,
+        style: Get.textTheme.labelMedium,
       ),
     );
   }
@@ -54,18 +52,18 @@ class FeedPage extends GetView<FeedController> {
   Widget _buildTabBar() {
     return TabBar(
       tabs: [
-        _buildTabBarMenu("메시지"),
+        _buildTabBarMenu("메세지"),
         _buildTabBarMenu("알림"),
       ],
-      controller: _tabController,
+      controller: controller.tabController,
     );
   }
 
   Widget _buildTabBarView() {
     return Expanded(
         child: TabBarView(
-      controller: _tabController,
-      children: [],
+      controller: controller.tabController,
+      children: [Text("message"), Text("alarm")],
     ));
   }
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:short_book/constants/app_routes.dart';
 import 'package:short_book/data/model/user_model.dart';
 import 'package:get/get.dart';
@@ -30,7 +31,10 @@ class UserService extends GetxService {
       if (firebaseUser == null) {
         print("startService - firebaseUser is null");
         unobserveUserDoc();
-        Get.offAllNamed(AppRoute.LOGIN);
+        print("startService - route is ${Get.currentRoute}");
+        if (Get.currentRoute != AppRoute.LOGIN) {
+          Get.offAllNamed(AppRoute.LOGIN);
+        }
       } else {
         if (currentUser?.uid != firebaseUser.uid) {
           print("startService - currentUser is null");
@@ -44,7 +48,11 @@ class UserService extends GetxService {
         }
         observeUserDoc();
         print("after observeUserDoc");
-        Get.offAllNamed(AppRoute.HOME);
+        print("startService2 - route is ${Get.currentRoute}");
+        if (Get.currentRoute != AppRoute.HOME) {
+          Get.offAllNamed(AppRoute.HOME);
+        }
+        // Get.offAllNamed(AppRoute.HOME);
       }
     });
   }
@@ -81,18 +89,20 @@ class UserService extends GetxService {
       print("friend is current user");
       return;
     }
-    friendsCol.doc(friend.uid).get().then((snapshot) {
-      if (snapshot.exists == false) {
-        friendsCol.doc(friend.uid).set({
-          'name': friend.name,
-          'email': friend.email,
-          'imageUrl': friend.imageUrl,
-          'createdAt': Timestamp.now()
-        });
-      } else {
-        print("addFriend : already added friend");
-      }
+    friendsCol.doc(friend.uid).set({
+      'name': friend.name,
+      'email': friend.email,
+      'imageUrl': friend.imageUrl,
+      'createdAt': Timestamp.now()
     });
+  }
+
+  Future<void> deleteFriend(UserModel friend) async {
+    if (friend.uid == currentUser?.uid) {
+      print("friend is current user");
+      return;
+    }
+    await friendsCol.doc(friend.uid).delete();
   }
 
   void observeUserDoc() {
@@ -124,6 +134,34 @@ class UserService extends GetxService {
       'updatedAt': Timestamp.now(),
     }, SetOptions(merge: true));
   }
+
+  // void signUp(UserModel user) async {
+  //   currentUser = user;
+  //   try {
+  //     await FirebaseAuth.instance.createUserWithEmailAndPassword(
+  //         email: user.email,
+  //         password: passwordController.text.trim());
+  //   } catch (e) {
+  //     Get.snackbar("About Account", "Account message",
+  //         snackPosition: SnackPosition.BOTTOM,
+  //         titleText:
+  //             Text("Account creation failed", style: Get.textTheme.labelMedium),
+  //         messageText: Text(e.toString(), style: Get.textTheme.labelSmall));
+  //   }
+  // }
+
+  // void logIn() async {
+  //   try {
+  //     await _auth.signInWithEmailAndPassword(
+  //         email: emailController.text.trim(),
+  //         password: passwordController.text.trim());
+  //   } catch (e) {
+  //     Get.snackbar("About Login", "Login message",
+  //         snackPosition: SnackPosition.BOTTOM,
+  //         titleText: Text("Login failed", style: Get.textTheme.labelMedium),
+  //         messageText: Text(e.toString(), style: Get.textTheme.labelSmall));
+  //   }
+  // }
 
   void signOut() {
     FirebaseAuth.instance.signOut();

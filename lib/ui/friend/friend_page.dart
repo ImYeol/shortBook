@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:short_book/bindings/user_search_binding.dart';
 import 'package:short_book/constants/app_config.dart';
 import 'package:short_book/controller/friend_controller.dart';
+import 'package:short_book/data/model/user_model.dart';
 import 'package:short_book/ui/friend/friend_list_item.dart';
 import 'package:short_book/ui/friend/user_search_page.dart';
 
@@ -31,8 +32,11 @@ class FriendPage extends GetView<FriendController> {
       backgroundColor: Get.theme.backgroundColor,
       actions: [
         IconButton(
-            onPressed: () =>
-                Get.to(() => UserSearchPage(), binding: UserSearchBinding()),
+            onPressed: () async {
+              final result = await Get.to(() => UserSearchPage(),
+                  binding: UserSearchBinding()) as UserModel;
+              controller.onNewFriendAdded(result);
+            },
             icon: const Icon(Icons.person_add_alt_outlined))
       ],
     );
@@ -56,11 +60,19 @@ class FriendPage extends GetView<FriendController> {
     //return Container();
     return Obx(() {
       if (controller.isFriendsLoaded == false) {
-        return CircularProgressIndicator();
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
       } else {
         return ListView.separated(
-          itemBuilder: ((context, index) =>
-              FriendListItem(controller.friends[index])),
+          itemBuilder: ((context, index) => InkWell(
+                child: FriendListItem(
+                  controller.friends[index],
+                  key: ValueKey(controller.friends[index].uid),
+                ),
+                onTap: () => controller
+                    .onFriendListItemTapped(controller.friends[index]),
+              )),
           itemCount: controller.friends.length,
           separatorBuilder: (context, index) => const Divider(),
         );

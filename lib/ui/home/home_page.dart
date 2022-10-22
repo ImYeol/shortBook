@@ -48,8 +48,8 @@ class HomePage extends GetView<HomeController> {
 
   Widget _buildBottomAppbaritems() {
     return Container(
-        height: 80,
-        padding: EdgeInsets.only(top: 10),
+        height: 50,
+        //padding: EdgeInsets.only(top: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: List.generate(

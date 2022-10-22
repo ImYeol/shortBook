@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:short_book/bindings/home_binding.dart';
 import 'package:short_book/constants/app_routes.dart';
+import 'package:short_book/data/repository/user_service.dart';
 import 'package:short_book/ui/login/login_page.dart';
 import 'package:short_book/ui/home/home_page.dart';
 
@@ -57,9 +59,21 @@ class LoginController extends GetxController {
 
   void signUp() async {
     try {
-      await _auth.createUserWithEmailAndPassword(
+      final result = await _auth.createUserWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
+      print("after createUserWithEmailAndPassword");
+      final firebaseUser = result.user;
+      print("updateDisplayName");
+      firebaseUser?.updateDisplayName(nameController.text.trim());
+      print("create user");
+      // TODO: remove getUser
+      Get.find<UserService>()
+          .getUser(firebaseUser?.uid ?? "")
+          .then((user) => user.update({
+                "email": emailController.text.trim(),
+                "name": nameController.text.trim(),
+              }));
     } catch (e) {
       Get.snackbar("About Account", "Account message",
           snackPosition: SnackPosition.BOTTOM,

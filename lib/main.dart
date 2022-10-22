@@ -2,16 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:short_book/bindings/app_binding.dart';
-import 'package:short_book/bindings/auth_guard.dart';
 import 'package:short_book/bindings/friend_selection_binding.dart';
 import 'package:short_book/bindings/home_binding.dart';
 import 'package:short_book/bindings/login_binding.dart';
-import 'package:short_book/bindings/splash_binding.dart';
 import 'package:short_book/bindings/writing_book_binding.dart';
 import 'package:short_book/constants/app_routes.dart';
 import 'package:short_book/constants/app_theme.dart';
-import 'package:short_book/controller/login_controller.dart';
 import 'package:short_book/data/repository/gallery_service.dart';
 import 'package:short_book/data/repository/user_service.dart';
 import 'package:short_book/firebase_options.dart';
@@ -21,12 +17,14 @@ import 'package:short_book/ui/book/friend_selection_page.dart';
 import 'package:short_book/ui/book/writing_paper_page.dart';
 import 'package:short_book/ui/home/home_page.dart';
 import 'package:short_book/ui/login/login_page.dart';
-import 'package:short_book/ui/splash/splash_page.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 // https://github.com/delay/flutter_starter
 // https://velog.io/@leeeeeoy/Flutter-GetXpattern-%EC%9D%B5%ED%98%80%EB%B3%B4%EA%B8%B0
+//https://velog.io/@tmdgks2222/Flutter-flutternativesplash
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   ).then(((value) => initServices()));
@@ -37,6 +35,10 @@ void initServices() {
   //UserService.instance.startService();
   Get.put(UserService());
   Get.put(GalleryService());
+  Future.delayed(
+    const Duration(seconds: 1),
+    () => Get.find<UserService>().startService(),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -45,29 +47,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final isLoggedIn = FirebaseAuth.instance.currentUser != null;
+    FlutterNativeSplash.remove();
     return GetMaterialApp(
       theme: AppTheme.darkTheme,
-      initialRoute: AppRoute.SPLASH,
-      //initialBinding: SplashBinding(),
-      // home: StreamBuilder(
-      //   stream: FirebaseAuth.instance.authStateChanges(),
-      //   builder: (context, snapshot) {
-      //     if (snapshot.connectionState == ConnectionState.waiting)
-      //       return SplashPage();
-      //     if (snapshot.hasError) return Text(snapshot.error.toString());
-      //     if (UserService.instance.uid != null) {
-      //       Get.offAllNamed(AppRoute.HOME);
-      //     } else {
-      //       Get.offAllNamed(AppRoute.LOGIN);
-      //     }
-      //     return const SplashPage();
-      //   },
-      // ),
+      initialRoute: isLoggedIn ? AppRoute.HOME : AppRoute.LOGIN,
+      initialBinding: isLoggedIn ? HomeBinding() : LoginBinding(),
       getPages: [
-        GetPage(
-            name: AppRoute.SPLASH,
-            page: () => SplashPage(),
-            binding: SplashBinding()),
         GetPage(
             name: AppRoute.HOME,
             page: () => const HomePage(),
@@ -84,12 +70,13 @@ class MyApp extends StatelessWidget {
             name: AppRoute.BOOK_SETTING,
             page: () => BookSettingPage(),
             binding: WritingBookBinding(),
-            transition: Transition.topLevel,
-            transitionDuration: const Duration(milliseconds: 500)),
+            transition: Transition.downToUp,
+            transitionDuration: const Duration(milliseconds: 200)),
         GetPage(
             name: AppRoute.BOOK_WRITING,
             page: () => const WritingPaperPage(),
-            transition: Transition.rightToLeft),
+            transition: Transition.rightToLeft,
+            transitionDuration: const Duration(milliseconds: 200)),
         GetPage(
           name: AppRoute.BOOK_GALLERY,
           page: () => BookGalleryPage(),

@@ -42,6 +42,6 @@ class UserSearchController extends GetxController {
 
   void addUserAsFriend(UserModel friend) async {
     await _userService.addFriend(friend);
-    Get.back();
+    Get.back(result: friend);
   }
 }

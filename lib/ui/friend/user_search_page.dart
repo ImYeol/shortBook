@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:short_book/controller/friend_controller.dart';
 import 'package:short_book/controller/user_search_controller.dart';
+import 'package:short_book/data/model/user_model.dart';
 import 'package:short_book/ui/friend/user_search_result.dart';
 
 class UserSearchPage extends GetView<UserSearchController> {
@@ -24,7 +25,7 @@ class UserSearchPage extends GetView<UserSearchController> {
   AppBar _buildSearchAppBar() {
     return AppBar(
       leading: IconButton(
-        onPressed: () => Get.back(),
+        onPressed: () => Get.back(result: UserModel()),
         icon: Icon(Icons.arrow_back_rounded),
       ),
       title: Text("친구 추가"),

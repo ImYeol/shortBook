@@ -56,6 +56,8 @@ class HomeController extends GetxController {
     //     binding: WritingBookBinding(),
     //     transition: Transition.topLevel,
     //     duration: const Duration(milliseconds: 500));
-    Get.toNamed(AppRoute.BOOK_SETTING);
+    Get.toNamed(
+      AppRoute.BOOK_SETTING,
+    );
   }
 }

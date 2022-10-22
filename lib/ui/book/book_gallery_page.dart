@@ -58,7 +58,7 @@ class BookGalleryPage extends GetView<BookGalleryController> {
           Column(
             children: [
               _buildTitleView(bookItem.title, bookItem.userName),
-              _buildContentView(bookItem.content),
+              _buildContentView(bookItem.title, bookItem.content),
             ],
           ),
           Positioned(
@@ -99,7 +99,7 @@ class BookGalleryPage extends GetView<BookGalleryController> {
     // );
   }
 
-  Widget _buildLineView(String line) {
+  Widget _buildLineView(String firstCh, String line) {
     return Padding(
       padding: EdgeInsets.symmetric(
           vertical: AppConfig.defaultVerticalPadding,
@@ -107,7 +107,7 @@ class BookGalleryPage extends GetView<BookGalleryController> {
       child: Row(
         children: [
           Text(
-            line[0],
+            firstCh,
             style: Get.textTheme.headlineLarge,
           ),
           const SizedBox(
@@ -122,10 +122,11 @@ class BookGalleryPage extends GetView<BookGalleryController> {
     );
   }
 
-  Widget _buildContentView(List<String> content) {
+  Widget _buildContentView(String title, List<String> content) {
     return Expanded(
       child: ListView.builder(
-        itemBuilder: (context, index) => _buildLineView(content[index]),
+        itemBuilder: (context, index) =>
+            _buildLineView(title[index], content[index]),
         itemCount: content.length,
         physics: const NeverScrollableScrollPhysics(),
       ),
