@@ -95,11 +95,12 @@ class BookSettingPage extends GetView<WritingBookController> {
         },
       )),
     );
-    children.addAll(List.generate(controller.participants.length,
-        (index) => ListTile(title: Text(controller.participants[index].uid))));
+    children.add(ListTile(title: Text(controller.participants.uid)));
     return ExpansionCardItem(
-      title: "참가자",
-      selectedItem: "${controller.participants.length}명",
+      title: "To",
+      selectedItem: controller.participants.name != ''
+          ? controller.participants.name
+          : '모두에게',
       children: children,
     );
   }

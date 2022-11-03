@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:short_book/constants/app_routes.dart';
 import 'package:short_book/data/model/user_model.dart';
 import 'package:short_book/data/repository/user_service.dart';
 
@@ -77,7 +78,9 @@ class FriendController extends GetxController {
         ignoreSafeArea: false);
   }
 
-  void requestShortBookTo(UserModel friend) {}
+  void requestShortBookTo(UserModel friend) {
+    Get.toNamed(AppRoute.BOOK_SETTING, arguments: {'friend': friend});
+  }
 
   void deleteFriend(UserModel friend) async {
     _isFriendsLoaded.value = false;

@@ -12,7 +12,7 @@ class WritingBookController extends GetxController {
   final _limitOfKeywordLength = AppConfig.defaultLimitOfKeywordLength.obs;
   final _limitOfTimeToWrite = 0.0.obs;
   final _title = ''.obs;
-  final _participants = <UserModel>[].obs;
+  final _participants = UserModel().obs;
   List<TextEditingController>? inputControllers;
 
   WritingBookController();
@@ -20,7 +20,7 @@ class WritingBookController extends GetxController {
   int get limitOfKeywordLength => _limitOfKeywordLength.value.toInt();
   int get limitOfTimeToWrite => _limitOfTimeToWrite.value.toInt();
   String get title => _title.value;
-  List<UserModel> get participants => _participants.value;
+  UserModel get participants => _participants.value;
 
   @override
   void onInit() {
@@ -30,6 +30,12 @@ class WritingBookController extends GetxController {
     //   inputControllers =
     //       List.generate(title.length, (index) => TextEditingController());
     // }
+  }
+
+  @override
+  void onReady() {
+    _participants.value = Get.arguments?['friend'] ?? UserModel();
+    super.onReady();
   }
 
   @override
