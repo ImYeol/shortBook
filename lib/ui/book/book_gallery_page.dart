@@ -4,6 +4,9 @@ import 'package:flutter/rendering.dart';
 import 'package:short_book/constants/app_config.dart';
 import 'package:short_book/controller/book_gallery_controller.dart';
 import 'package:get/get.dart';
+import 'package:short_book/data/model/author.dart';
+import 'package:short_book/data/model/gallery_book.dart';
+import 'package:short_book/data/model/line.dart';
 import 'package:short_book/data/model/short_book.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:short_book/widgets/keep_alive_wrapper.dart';
@@ -40,7 +43,7 @@ class BookGalleryPage extends GetView<BookGalleryController> {
     return RefreshIndicator(
         child: PageView.builder(
           itemBuilder: (context, index) =>
-              _buildBookItem(controller.shortBooks[index]),
+              _buildBookItem(controller.shortBooks[index] as GalleryBook),
           scrollDirection: Axis.vertical,
           onPageChanged: ((index) => controller.checkFetchable(index)),
           itemCount: controller.shortBooks.length,
@@ -49,7 +52,7 @@ class BookGalleryPage extends GetView<BookGalleryController> {
         onRefresh: () => controller.onRefresh());
   }
 
-  Widget _buildBookItem(ShortBook bookItem) {
+  Widget _buildBookItem(GalleryBook bookItem) {
     return Container(
       width: double.infinity,
       height: double.infinity,
@@ -57,8 +60,9 @@ class BookGalleryPage extends GetView<BookGalleryController> {
         children: [
           Column(
             children: [
-              _buildTitleView(bookItem.title, bookItem.userName),
-              _buildContentView(bookItem.title, bookItem.content),
+              _buildTitleView(bookItem.title,
+                  bookItem.lines.map((line) => line.author).toList()),
+              _buildContentView(bookItem.title, bookItem.lines),
             ],
           ),
           Positioned(
@@ -71,7 +75,7 @@ class BookGalleryPage extends GetView<BookGalleryController> {
     );
   }
 
-  Widget _buildTitleView(String title, String writers) {
+  Widget _buildTitleView(String title, List<Author> writers) {
     return Container(
         height: 100,
         width: Get.width,
@@ -84,8 +88,9 @@ class BookGalleryPage extends GetView<BookGalleryController> {
               style: Get.textTheme.headlineLarge,
             ),
             Text(
-              "by $writers",
+              "by ${writers.map((writer) => '${writer.name} ')}",
               style: Get.textTheme.bodyMedium,
+              overflow: TextOverflow.ellipsis,
             )
           ],
         ));
@@ -122,12 +127,12 @@ class BookGalleryPage extends GetView<BookGalleryController> {
     );
   }
 
-  Widget _buildContentView(String title, List<String> content) {
+  Widget _buildContentView(String title, List<Line> lines) {
     return Expanded(
       child: ListView.builder(
         itemBuilder: (context, index) =>
-            _buildLineView(title[index], content[index]),
-        itemCount: content.length,
+            _buildLineView(title[index], lines[index].content),
+        itemCount: lines.length,
         physics: const NeverScrollableScrollPhysics(),
       ),
     );
@@ -155,7 +160,7 @@ class BookGalleryPage extends GetView<BookGalleryController> {
     );
   }
 
-  Widget _buildFunctionButtons(ShortBook shortBook) {
+  Widget _buildFunctionButtons(GalleryBook shortBook) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.end,

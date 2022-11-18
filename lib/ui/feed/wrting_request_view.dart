@@ -1,121 +1,98 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:short_book/constants/app_routes.dart';
 import 'package:short_book/constants/app_theme.dart';
+import 'package:short_book/controller/feed_controller.dart';
+import 'package:short_book/data/model/relay_book.dart';
 
 class WritingRequestView extends StatelessWidget {
-  const WritingRequestView({Key? key}) : super(key: key);
+  final controller = Get.find<FeedController>();
+  WritingRequestView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: ListView(
-        children: [
-          requestCardItem(),
-        ],
-      ),
+      child: Obx(() {
+        if (controller.request.isEmpty) {
+          return const Center(
+            child: Text("empty"),
+          );
+        } else {
+          return ListView.builder(
+            itemBuilder: (context, index) => InkWell(
+              onTap: () =>
+                  controller.gotoWritingPage(controller.request[index]),
+              child: requestCardItem(controller.request[index]),
+            ),
+            itemCount: controller.request.length,
+          );
+        }
+      }),
     );
   }
 }
 
 class requestCardItem extends StatelessWidget {
-  const requestCardItem({Key? key}) : super(key: key);
-
+  final RelayBook challengeInfo;
+  const requestCardItem(this.challengeInfo, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsetsDirectional.fromSTEB(16, 12, 12, 12),
-      child: Container(
-        width: 230,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 4,
-              color: Color(0x34090F13),
-              offset: Offset(0, 2),
-            )
-          ],
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 4),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
-                width: double.infinity,
-                height: 140,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(0),
-                    bottomRight: Radius.circular(0),
-                    topLeft: Radius.circular(12),
-                    topRight: Radius.circular(12),
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+                  child: Icon(
+                    Icons.pending_outlined,
+                    color: Colors.white,
+                    size: 50,
                   ),
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
-                          child: Icon(
-                            Icons.pending_outlined,
-                            color: Color(0xFF100101),
-                            size: 75,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            '가나다',
-                            style: Get.textTheme.displayLarge
-                                ?.copyWith(fontSize: 30),
-                          ),
-                          Text('삼행시 요청이 들어왔습니다',
-                              style: Get.textTheme.titleLarge?.copyWith()),
-                        ],
-                      ),
-                    ),
-                  ],
+              ],
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(16, 8, 0, 0),
+                  child: Text(
+                    challengeInfo.title,
+                    style: Get.textTheme.titleLarge,
+                  ),
                 ),
-              ),
-              Divider(
-                thickness: 1,
-                indent: 15,
-                endIndent: 15,
-                color: Get.theme.primaryColor,
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(12, 12, 12, 0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 0, 8, 8),
-                      child: Text(
-                        'by asdfesx',
-                        style: Get.textTheme.bodyLarge,
-                      ),
-                    ),
-                  ],
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(16, 4, 16, 0),
+                  child: Text(
+                    '글짓기 요청이 있습니다',
+                    style: Get.textTheme.bodyLarge,
+                  ),
                 ),
-              ),
-            ],
-          ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(16, 4, 0, 12),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        'by ${challengeInfo.fromAuthor.name}',
+                        style: Get.textTheme.bodyMedium,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
-      ),
+      ],
     );
   }
 }

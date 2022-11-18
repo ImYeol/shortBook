@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:short_book/data/model/gallery_book.dart';
 import 'package:short_book/data/model/short_book.dart';
 
 class GalleryService extends GetxService {
@@ -38,7 +39,7 @@ class GalleryService extends GetxService {
 
     List<ShortBook> shortBooks = [];
     snapshot.docs.forEach((doc) {
-      shortBooks.add(ShortBook.fromJson(
+      shortBooks.add(GalleryBook.fromJson(
         doc.data() as Map<String, dynamic>,
         doc.id,
       ));
@@ -50,19 +51,6 @@ class GalleryService extends GetxService {
   Future<ShortBook?> load(id) async {
     DocumentSnapshot doc = await galleryCol.doc(id).get();
     if (doc.exists == false) return null;
-    return ShortBook.fromJson(doc.data() as Map<String, dynamic>, doc.id);
-  }
-
-  Future<List<ShortBook>> getTempShortBooks(
-      {String? uid, int limit = 5, List<Object>? startAfter}) async {
-    final start = startAfter!.first as int;
-    if (start > 20) {
-      return List.generate(2, (index) => ShortBook());
-    }
-    //List<ShortBook> shortBooks = [];
-    final shortBooks = await Future.delayed(const Duration(seconds: 1))
-        .then((value) => List.generate(limit, (index) => ShortBook()));
-
-    return shortBooks;
+    return GalleryBook.fromJson(doc.data() as Map<String, dynamic>, doc.id);
   }
 }

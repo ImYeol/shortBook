@@ -3,10 +3,10 @@ import 'package:get/get.dart';
 import 'package:short_book/bindings/home_binding.dart';
 import 'package:short_book/constants/app_config.dart';
 import 'package:short_book/constants/app_routes.dart';
-import 'package:short_book/controller/writing_book_controller.dart';
+import 'package:short_book/controller/writing_paper_controller.dart';
 import 'package:short_book/ui/home/home_page.dart';
 
-class WritingPaperPage extends GetView<WritingBookController> {
+class WritingPaperPage extends GetView<WritingPaperController> {
   const WritingPaperPage({Key? key}) : super(key: key);
 
   @override

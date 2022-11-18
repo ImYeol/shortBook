@@ -18,14 +18,7 @@ class UserService extends GetxService {
 
   CollectionReference get friendsCol => doc.collection('friends');
 
-  @override
-  void onInit() {
-    // TODO: implement onInit
-    super.onInit();
-    //startService();
-  }
-
-  void startService() {
+  void init() {
     FirebaseAuth.instance.authStateChanges().listen((firebaseUser) {
       print("authStateChanges called");
       if (firebaseUser == null) {

@@ -1,21 +1,18 @@
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:short_book/constants/app_config.dart';
 import 'package:short_book/constants/app_routes.dart';
-import 'package:short_book/data/model/book_studio.dart';
-import 'package:short_book/data/model/short_book.dart';
+import 'package:short_book/data/model/author.dart';
+import 'package:short_book/data/model/gallery_book.dart';
+import 'package:short_book/data/model/line.dart';
+import 'package:short_book/data/model/relay_book.dart';
 import 'package:short_book/data/model/user_model.dart';
+import 'package:short_book/data/repository/user_service.dart';
 
-// https://anangnugraha.medium.com/flutter-implementing-pagination-with-getx-state-management-6b824b1e1eb5
-class WritingBookController extends GetxController {
+class BookSettingController extends GetxController {
   final _limitOfKeywordLength = AppConfig.defaultLimitOfKeywordLength.obs;
   final _limitOfTimeToWrite = 0.0.obs;
   final _title = ''.obs;
   final _participants = UserModel().obs;
-  List<TextEditingController>? inputControllers;
-
-  WritingBookController();
 
   int get limitOfKeywordLength => _limitOfKeywordLength.value.toInt();
   int get limitOfTimeToWrite => _limitOfTimeToWrite.value.toInt();
@@ -26,10 +23,6 @@ class WritingBookController extends GetxController {
   void onInit() {
     super.onInit();
     print("WritingBookController onInit");
-    // if (title.isNotEmpty) {
-    //   inputControllers =
-    //       List.generate(title.length, (index) => TextEditingController());
-    // }
   }
 
   @override
@@ -41,8 +34,6 @@ class WritingBookController extends GetxController {
   @override
   void onClose() {
     super.onClose();
-    print("WritingBookController onClose");
-    inputControllers?.clear();
   }
 
   void onKeywordLengthSelectionChanged(double length) {
@@ -75,24 +66,22 @@ class WritingBookController extends GetxController {
 
   void onSubmitButtonPressed() {
     if (isValidSettings()) {
-      inputControllers =
-          List.generate(title.length, (index) => TextEditingController());
-      Get.toNamed(AppRoute.BOOK_WRITING);
+      Get.toNamed(AppRoute.BOOK_WRITING, arguments: {
+        'relayBook': RelayBook(
+            title: _title.value,
+            lines: List.generate(_title.value.length,
+                (index) => Line(author: InvalidAuthor(), content: '')),
+            fromAuthor: Author.fromUserModel(
+                Get.find<UserService>().currentUser ?? UserModel()),
+            targetAuthor: _participants.value.uid == ''
+                ? InvalidAuthor()
+                : Author.fromUserModel(Get.find<UserService>().currentUser!),
+            //: Author.fromUserModel(_participants.value),
+            timeLimit: _limitOfTimeToWrite.value.toInt(),
+            keywordLength: _limitOfKeywordLength.value.toInt())
+      });
     } else {
       print("invalid settings");
     }
-  }
-
-  // TODO: store book to firestore
-  void onUploadButtonPressed() async {
-    if (inputControllers == null) {
-      Get.snackbar("ERROR", "please write something");
-      return;
-    }
-    final shortBook = await ShortBook().create(
-        title: title,
-        content:
-            inputControllers!.map((controller) => controller.text).toList());
-    Get.until((route) => Get.currentRoute == AppRoute.HOME);
   }
 }

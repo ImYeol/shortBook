@@ -2,13 +2,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:short_book/bindings/book_setting_binding.dart';
 import 'package:short_book/bindings/friend_selection_binding.dart';
 import 'package:short_book/bindings/home_binding.dart';
 import 'package:short_book/bindings/login_binding.dart';
 import 'package:short_book/bindings/writing_book_binding.dart';
 import 'package:short_book/constants/app_routes.dart';
 import 'package:short_book/constants/app_theme.dart';
+import 'package:short_book/data/repository/feed_service.dart';
 import 'package:short_book/data/repository/gallery_service.dart';
+import 'package:short_book/data/repository/message_service.dart';
 import 'package:short_book/data/repository/user_service.dart';
 import 'package:short_book/firebase_options.dart';
 import 'package:short_book/ui/book/book_gallery_page.dart';
@@ -35,10 +38,13 @@ void initServices() {
   //UserService.instance.startService();
   Get.put(UserService());
   Get.put(GalleryService());
-  Future.delayed(
-    const Duration(seconds: 1),
-    () => Get.find<UserService>().startService(),
-  );
+  Get.put(MessageService());
+  Get.put(FeedService());
+  Future.delayed(const Duration(milliseconds: 500), () {
+    Get.find<UserService>().init();
+    Get.find<MessageService>().init();
+    Get.find<FeedService>().init();
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -69,12 +75,13 @@ class MyApp extends StatelessWidget {
         GetPage(
             name: AppRoute.BOOK_SETTING,
             page: () => BookSettingPage(),
-            binding: WritingBookBinding(),
+            binding: BookSettingBinding(),
             transition: Transition.downToUp,
             transitionDuration: const Duration(milliseconds: 200)),
         GetPage(
             name: AppRoute.BOOK_WRITING,
             page: () => const WritingPaperPage(),
+            binding: WritingBookBinding(),
             transition: Transition.rightToLeft,
             transitionDuration: const Duration(milliseconds: 200)),
         GetPage(

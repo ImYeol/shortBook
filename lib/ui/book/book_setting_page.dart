@@ -3,13 +3,14 @@ import 'package:get/get.dart';
 import 'package:short_book/bindings/friend_selection_binding.dart';
 import 'package:short_book/constants/app_config.dart';
 import 'package:short_book/constants/app_routes.dart';
-import 'package:short_book/controller/writing_book_controller.dart';
+import 'package:short_book/controller/book_setting_controller.dart';
+import 'package:short_book/controller/writing_paper_controller.dart';
 import 'package:short_book/ui/book/friend_selection_page.dart';
 import 'package:short_book/ui/book/expansion_card_item.dart';
 import 'package:short_book/ui/book/writing_paper_page.dart';
 import 'package:short_book/widgets/min_max_showing_slider.dart';
 
-class BookSettingPage extends GetView<WritingBookController> {
+class BookSettingPage extends GetView<BookSettingController> {
   BookSettingPage({Key? key}) : super(key: key);
 
   @override
